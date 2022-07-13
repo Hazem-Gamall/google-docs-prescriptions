@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title></title>
+  <link rel='stylesheet' href='bootstrap-4.6.1-dist/css/bootstrap.min.css'>
+  <link rel='stylesheet' href='css/styles.css'>
+</head>
+
+<body>
+  <dialog>
+    <div class="container p-0 m-0">
+      <div class="row justify-content-end mb-3">
+        <button class="close-dialog btn bg-light">X</button>
+      </div>
+
+
+      <div class="row justify-content-center mb-3">
+        <h4><strong>Create a new file?</strong></h4>
+      </div>
+      <div class="row justify-content-center">
+        
+          <button class="btn bg-primary text-light mr-3" onclick="beginDocCreation()">Okay</button>
+          <button class="close-dialog  btn bg-danger text-light ml-3">Cancel</button>
+
+      </div>
+    </div>
+
+  </dialog>
+  <div class="container" id="main-content">
+    <div class="card shadow-lg">
+      <div class="card-header bg-white">
+        <h2 class="text-center">Patient's file name</h2>
+      </div>
+
+      <div class="card-body">
+        <form id="file-name-form">
+          <div class="row justify-content-center my-3">
+            <div class="col-7">
+              <div class="form-group">
+                <input class='form-control' type="text" name="file-name" id="file-name" placeholder="File Name">
+              </div>
+            </div>
+            <div class="col-2">
+              <button class='btn btn-danger' type="submit">Submit</button>
+            </div>
+          </div>
+        </form>
+      </div>
+    </div>
+
+  </div>
+
+
+
+
+  <!-- <button id="authorize_button" onclick="handleAuthClick()">Authorize</button> -->
+  <!-- <button id="signout_button" onclick="handleSignoutClick()">Sign Out</button> -->
+
+  <pre id="content" style="white-space: pre-wrap;"></pre>
+  <script src="js/auth.js"></script>
+  <script src="jquery/jquery-3.6.0.min.js"></script>
+  <script src='bootstrap-4.6.1-dist/js/bootstrap.bundle.min.js'></script>
+  <script src="js/docs.js"></script>
+  <script src="js/index.js"></script>
+
+
+
+  <script async defer src="https://apis.google.com/js/api.js" onload="gapiLoaded()"></script>
+  <script async defer src="https://accounts.google.com/gsi/client" onload="gisLoaded()"></script>
+</body>
+
+</html>

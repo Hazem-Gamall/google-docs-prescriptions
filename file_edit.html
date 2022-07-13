@@ -1,0 +1,117 @@
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <link rel='stylesheet' href='bootstrap-4.6.1-dist/css/bootstrap.min.css'>
+    <link rel='stylesheet' href='css/styles.css'>
+    <link rel="stylesheet" href="css/file_edit.css">
+</head>
+
+<body class="d-flex justify-content-center">
+
+    <div id="document" class="shadow-sm m-3">
+        <form action="">
+            <div class="container">
+                <div class="row justify-content-center mt-5">
+                    <div class="col-8">
+                        <div class="form-group">
+                            <input class="form-control ar-input" type="text" name="name" id="">
+                        </div>
+                    </div>
+                    <span>/</span>
+                    <div class="col-3">
+                        <div class="form-group">
+                            <select class="form-control" name="gender" id="">
+                                <option value="الأستاذ">الأستاذ</option>
+                                <option value="الأستاذة">الأستاذة</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="row justify-content-end">
+                    <div class="col-5">
+                        <input class="form-control" type="date" name="date">
+                    </div>
+                </div>
+
+                <div class="row justify-content-center my-4">
+                    <div class="col-2 pr-0">
+                        <label for="diagnosis">Diagnosis:</label>
+                    </div>
+                    <div class="col-6">
+                        <!-- <input type="text" class="form-control" name="diagnosis" id="diagnosis"> -->
+                        <textarea class="form-control" name="diagnosis" id="diagnosis" cols="30" rows="2"></textarea>
+                    </div>
+                </div>
+
+                <div class="row justify-content-end mr-5">
+                    <p class="medication">علاج شهري</p>
+                </div>
+
+                <div class="row justify-content-center">
+
+                    <table id="monthly-med">
+                    </table>
+                </div>
+                <div class="row justify-content-center">
+                    <button table-id="monthly-med" type="button" class="btn text-light py-0 mx-2 add-row-btn">+</button>
+                    <button table-id="monthly-med" type="button" class="btn text-light py-0 mx-2 remove-row-btn">-</button>
+                </div>
+
+                <div class="row justify-content-end mr-5">
+                    <p class="medication">علاج مؤقت</p>
+                </div>
+
+                <div class="row justify-content-center">
+
+                    <table id="temp-med">
+                    </table>
+                </div>
+                
+                <div class="row justify-content-center">
+                    <button table-id="temp-med" type="button" class="btn text-light py-0 mx-2 add-row-btn">+</button>
+                    <button table-id="temp-med" type="button" class="btn text-light py-0 mx-2 remove-row-btn">-</button>
+                </div>
+
+                <div class="row justify-content-end mr-5">
+                    <p class="">:المطلوب</p>
+                </div>
+
+                <div class="row justify-content-center">
+                    
+                    <table id="required">
+                    
+                    </table>
+                </div>
+                <div class="row justify-content-center">
+                    <button table-id="required" type="button" class="btn text-light py-0 mx-2 add-row-btn">+</button>
+                    <button table-id="required" type="button" class="btn text-light py-0 mx-2 remove-row-btn">-</button>
+                </div>
+                <datalist id="mylist">
+                    <option value="Option 1">
+                    <option value="Option 2">
+                    <option value="Option 3">
+                 </datalist>
+                <input type="search" list="mylist">
+
+
+            </div>
+        </form>
+
+    </div>
+
+
+
+
+    <script src="js/auth.js"></script>
+    <script src="jquery/jquery-3.6.0.min.js"></script>
+    <script src='bootstrap-4.6.1-dist/js/bootstrap.bundle.min.js'></script>
+    <script src="js/docs.js"></script>
+    <script src="js/file_edit.js"></script>
+</body>
+
+</html>

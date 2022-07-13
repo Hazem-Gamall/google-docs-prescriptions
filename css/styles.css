@@ -1,0 +1,44 @@
+
+:root{
+    --background: #e9e9e9;
+}
+
+body{
+    background-color: var(--background);
+}
+
+dialog {
+    border: none !important;
+    border-radius: calc(5px * var(--ratio));
+    box-shadow: 0 0 #0000, 0 0 #0000, 0 25px 50px -12px rgba(0, 0, 0, 0.25);
+    padding: 1.6rem;
+    /* max-width: 400px; */
+  }
+    
+
+dialog{
+    border-radius: 20px;
+    width: 50vw;
+}
+
+dialog button{
+    border-radius: 15px;
+}
+
+::backdrop, /* for native <dialog> */
+dialog + .backdrop {
+  /* for dialog-polyfill */
+  /* a transparent shade of gray */
+  background-color: rgba(0, 0, 0, 0.2);
+}
+
+.card .card-header{
+    border-top-left-radius: 15px;
+    border-top-right-radius: 15px;
+}
+
+.card{
+    border-radius: 15px;
+    margin-top: 20vh;
+}
+
