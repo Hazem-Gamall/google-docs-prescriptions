@@ -9,6 +9,14 @@ td {
 
 }
 
+textarea{
+    resize: none;
+}
+
+table input{
+border: none !important;
+}
+
 .ar-input{
     direction: rtl;
 }
@@ -16,6 +24,14 @@ td {
 .medication{
     text-decoration: underline;
     font-weight: bold;
+}
+
+.add-row-btn{
+    background-color:var(--success);
+}
+
+.remove-row-btn{
+    background-color: var(--danger);
 }
 
 #document{
@@ -27,10 +43,3 @@ td {
     
 }
 
-.add-row-btn{
-    background-color:#b5b5b5!important;
-}
-
-.remove-row-btn{
-    background-color: var(--danger);
-}

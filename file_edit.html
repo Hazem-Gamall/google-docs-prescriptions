@@ -10,9 +10,96 @@
     <link rel="stylesheet" href="css/file_edit.css">
 </head>
 
+
 <body class="d-flex justify-content-center">
 
+
+    <datalist id="required-tests-list">
+        <option value="CBC"></option>
+        <option value="CRP"></option>
+        <option value="ESR"></option>
+        <option value="S.ferritin"></option>
+        <option value="LDH"></option>
+        <option value="D-dimerTIBC"></option>
+        <option value="IL6"></option>
+        <option value="ProcalcitoninHsTroponin"></option>
+        <option value="Troponin"></option>
+        <option value="I"></option>
+        <option value="CK"></option>
+        <option value="MB"></option>
+        <option value="NT-ProBNPLipid"></option>
+        <option value="profile,"></option>
+        <option value="Tch"></option>
+        <option value="HDL"></option>
+        <option value="PTUrea"></option>
+        <option value="S.creat"></option>
+        <option value="Uric"></option>
+        <option value="A"></option>
+        <option value="Na"></option>
+        <option value="K"></option>
+        <option value="UrinalysisAlb/Creat"></option>
+        <option value="ratio"></option>
+        <option value="e-GFRUrinary"></option>
+        <option value="metanephrine"></option>
+        <option value="S.CatecholamineF"></option>
+        <option value="PP"></option>
+        <option value="RBS"></option>
+        <option value="HbA1c"></option>
+        <option value="Free"></option>
+        <option value="T3"></option>
+        <option value="T4"></option>
+        <option value="TSHAntithyroglobulin"></option>
+        <option value="abAnti"></option>
+        <option value="Thyroid"></option>
+        <option value="PeroxidaseAbsS.Bilirubin"></option>
+        <option value="(T-D)"></option>
+        <option value="ALT"></option>
+        <option value="AST"></option>
+        <option value="CK"></option>
+        <option value="S.albuminVitamin"></option>
+        <option value="D"></option>
+        <option value="S.Calcium"></option>
+        <option value="(T-I)"></option>
+        <option value="Mag"></option>
+        <option value="Vitamin"></option>
+        <option value="BPSA"></option>
+        <option value="(T-F)"></option>
+        <option value="PTHHbsAg"></option>
+        <option value="HCVab"></option>
+        <option value="HAV"></option>
+        <option value="IgM"></option>
+        <option value="HAV"></option>
+        <option value="IgGHCV"></option>
+        <option value="PCR"></option>
+        <option value="CA"></option>
+        <option value="15.3"></option>
+        <option value="CA"></option>
+        <option value="19.9"></option>
+        <option value="AFPHelicobacter"></option>
+        <option value="Ag"></option>
+        <option value="in"></option>
+        <option value="stool,S.cortisol"></option>
+        <option value="9"></option>
+        <option value="AM,"></option>
+        <option value="9"></option>
+        <option value="PM"></option>
+        <option value="ACTH"></option>
+    </datalist>
+
+    <datalist id="monthly-med-list">
+        <option value="Concor">
+        <option value="Plavix">
+        <option value="Ator">
+    </datalist>
+
+    <datalist id="monthly-med-freq-list">
+        <option value="قرص بعد الإفطار "></option>
+        <option value="قرص بعد العشاء"></option>
+    </datalist>
+
+
     <div id="document" class="shadow-sm m-3">
+
         <form action="">
             <div class="container">
                 <div class="row justify-content-center mt-5">
@@ -44,7 +131,7 @@
                     </div>
                     <div class="col-6">
                         <!-- <input type="text" class="form-control" name="diagnosis" id="diagnosis"> -->
-                        <textarea class="form-control" name="diagnosis" id="diagnosis" cols="30" rows="2"></textarea>
+                        <textarea class="form-control" name="diagnosis" id="diagnosis" rows="2"></textarea>
                     </div>
                 </div>
 
@@ -53,52 +140,89 @@
                 </div>
 
                 <div class="row justify-content-center">
+                    <button table-id="monthly-med" type="button" class="btn text-light py-0 mx-2 add-row-btn">+</button>
+                    <button table-id="monthly-med" type="button"
+                        class="btn text-light py-0 mx-2 remove-row-btn">-</button>
+                </div>
 
-                    <table id="monthly-med">
+                <div class="row justify-content-center">
+
+                    <table id="monthly-med" class="mb-4">
                     </table>
                 </div>
-                <div class="row justify-content-center">
-                    <button table-id="monthly-med" type="button" class="btn text-light py-0 mx-2 add-row-btn">+</button>
-                    <button table-id="monthly-med" type="button" class="btn text-light py-0 mx-2 remove-row-btn">-</button>
-                </div>
+
 
                 <div class="row justify-content-end mr-5">
                     <p class="medication">علاج مؤقت</p>
                 </div>
 
                 <div class="row justify-content-center">
-
-                    <table id="temp-med">
-                    </table>
-                </div>
-                
-                <div class="row justify-content-center">
                     <button table-id="temp-med" type="button" class="btn text-light py-0 mx-2 add-row-btn">+</button>
                     <button table-id="temp-med" type="button" class="btn text-light py-0 mx-2 remove-row-btn">-</button>
                 </div>
-
-                <div class="row justify-content-end mr-5">
-                    <p class="">:المطلوب</p>
-                </div>
-
                 <div class="row justify-content-center">
-                    
-                    <table id="required">
-                    
+
+                    <table id="temp-med" class="mb-4">
                     </table>
                 </div>
-                <div class="row justify-content-center">
-                    <button table-id="required" type="button" class="btn text-light py-0 mx-2 add-row-btn">+</button>
-                    <button table-id="required" type="button" class="btn text-light py-0 mx-2 remove-row-btn">-</button>
+
+
+
+                <div class="row justify-content-end mr-5">
+                    <span class="">:المطلوب</span>
                 </div>
-                <datalist id="mylist">
-                    <option value="Option 1">
-                    <option value="Option 2">
-                    <option value="Option 3">
-                 </datalist>
-                <input type="search" list="mylist">
+                <div class="row justify-content-end mr-5">
+                    <p>:التحاليل الاتية</p>
+                </div>
+
+                <div class="row justify-content-center">
+                    <button table-id="required-tests" type="button"
+                        class="btn text-light py-0 mx-2 add-row-btn">+</button>
+                    <button table-id="required-tests" type="button"
+                        class="btn text-light py-0 mx-2 remove-row-btn">-</button>
+                </div>
+
+                <div class="row justify-content-center">
+
+                    <table id="required-tests" class="mb-4">
+
+                    </table>
+                </div>
 
 
+                <div class="row justify-content-end mr-5">
+                    <p>:الاشعات الاتية</p>
+                </div>
+
+                <div class="row justify-content-center">
+                    <button table-id="required-scans" type="button"
+                        class="btn text-light py-0 mx-2 add-row-btn">+</button>
+                    <button table-id="required-scans" type="button"
+                        class="btn text-light py-0 mx-2 remove-row-btn">-</button>
+                </div>
+
+                <div class="row justify-content-center">
+
+                    <table id="required-scans" class="mb-4">
+
+                    </table>
+                </div>
+
+
+
+                <div class="row justify-content-end mr-5">
+                    <p>ملاحظات</p>
+                </div>
+                <div class="row justify-content-end mr-5">
+                    <div class="col-10">
+                        <textarea class="form-control" name="notes" id="" rows="4"></textarea>
+                    </div>
+                </div>
+
+            </div>
+
+            <div class="row justify-content-center mt-3">
+                <button type="submit" class="btn bg-primary text-light">Submit</button>
             </div>
         </form>
 
@@ -111,7 +235,12 @@
     <script src="jquery/jquery-3.6.0.min.js"></script>
     <script src='bootstrap-4.6.1-dist/js/bootstrap.bundle.min.js'></script>
     <script src="js/docs.js"></script>
-    <script src="js/file_edit.js"></script>
+    <script type="module" src="js/file_edit.js"></script>
+
+
+    <script async defer src="https://apis.google.com/js/api.js" onload="gapiLoaded()"></script>
+    <script async defer src="https://accounts.google.com/gsi/client" onload="gisLoaded()"></script>
+
 </body>
 
 </html>

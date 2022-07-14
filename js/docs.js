@@ -3,7 +3,7 @@
  * Prints the title of a sample doc:
  * https://docs.google.com/document/d/195j9eDD3ccgjQRttHhJPymLJUCOUjs-jmwTrekvdjFE/edit
  */
- async function listFiles(file_name) {
+async function listFiles(file_name) {
     let response;
     console.log('before response')
     response = await gapi.client.drive.files.list({
@@ -48,36 +48,24 @@ async function getDoc(doc_id) {
     return response.result
 }
 
-async function editDoc(doc_id) {
+async function getDocLastIndex(doc_id) {
+    let doc = await getDoc(doc_id);
+    console.log('doc', doc)
+    console.log('last content', doc.body.content.at(-1));
+    let body_end_index = doc.body.content.at(-1).endIndex - 1
+    console.log(body_end_index)
+    return body_end_index;
+}
+
+async function editDoc(doc_id, edits) {
     try {
-        let doc = await getDoc(doc_id);
-        console.log('doc', doc)
-        console.log('last content', doc.body.content.at(-1));
-        let body_end_index = doc.body.content.at(-1).endIndex - 1
-        console.log(body_end_index)
         let response = await gapi.client.docs.documents.batchUpdate(
             {
                 documentId: doc_id,
-                resource: {
-                    requests: [
-                        {
-                            insertPageBreak: {
-                                location: {
-                                    index: body_end_index
-                                }
-                            }
-                        },
+                resource:{
+                    requests: edits
+                }
 
-                        {
-                            insertText: {
-                                text: "Sameer Bayani",
-                                location: {
-                                    index: body_end_index + 1, // Modified
-                                },
-                            }
-                        }
-                    ],
-                },
             }
         )
         console.log('batchUpdate success', response)

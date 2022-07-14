@@ -41,7 +41,6 @@ async function intializeGapiClient() {
         discoveryDocs: DISCOVERY_DOCS,
     });
     gapiInited = true;
-    // maybeEnableButtons();
     let session_token = sessionStorage.getItem('token')
     if (session_token) {
         session_token = JSON.parse(session_token);
@@ -61,8 +60,10 @@ function gisLoaded() {
     });
     gisInited = true;
 
-    // maybeEnableButtons();
+    
 }
+
+
 
 /**
  * Enables user interaction after all libraries are loaded.
@@ -87,8 +88,8 @@ async function handleAuthClick(callback) {
         // document.getElementById('authorize_button').style.visibility = 'hidden';
         let token_string = JSON.stringify(gapi.client.getToken());
         sessionStorage.setItem('token', token_string);
-
-        await callback();
+        if(callback)
+            await callback();
 
     };
 

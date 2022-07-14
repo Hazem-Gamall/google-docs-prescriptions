@@ -18,9 +18,10 @@ function closeDialog() {
 
 function moveToFileEdit(documentId){
     let params = new URLSearchParams(`file_id=${documentId}`);
+    params.set('token', JSON.stringify(gapi.client.getToken()))
     // console.log('params get', params.get('file_id'))
-    // console.log('params', params.toString());
-    let new_url = new URL('http://localhost:8000/file_edit.html');
+    console.log('params', params.toString());
+    let new_url = new URL(`${location.origin}/file_edit.html`);
     new_url.search = params.toString();
     // console.log('new url', new_url)
     // console.log('new url string', new_url.toString())
