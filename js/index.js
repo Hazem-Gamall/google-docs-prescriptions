@@ -1,12 +1,14 @@
+import {updateDocumentStyle} from './modules/doc_update_utils.js'
 
-
+document.querySelector('#dialog-ok').onclick = beginDocCreation;
 
 let dialog = document.querySelector('dialog');
 async function beginDocCreation() {
     dialog.querySelector('.container').innerHTML = '<p>Loading...</p>'
     let documentId = await createDoc(document.querySelector('#file-name').value);
+    await editDoc(documentId, [updateDocumentStyle()]);
     closeDialog();
-    moveToFileEdit(documentId);
+    moveToFileEdit(documentId, true);
 }
 
 function openDialog(){
@@ -16,9 +18,10 @@ function closeDialog() {
     dialog.close();
 }
 
-function moveToFileEdit(documentId){
+function moveToFileEdit(documentId, newDoc){
     let params = new URLSearchParams(`file_id=${documentId}`);
-    params.set('token', JSON.stringify(gapi.client.getToken()))
+    if(newDoc)
+        params.set('new_doc',true);
     // console.log('params get', params.get('file_id'))
     console.log('params', params.toString());
     let new_url = new URL(`${location.origin}/file_edit.html`);

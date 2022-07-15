@@ -36,10 +36,31 @@ border: none !important;
 
 #document{
     min-height: 95%;
-    height: fit-content;
+    /* height: fit-content; */
+    overflow-y: scroll;
+    overflow-x:hidden;
     /* height: 100%; */
     width: 40%;
     background-color: white;
     
 }
 
+::-webkit-scrollbar {
+    width: 7px;
+  }
+  
+  /* Track */
+  ::-webkit-scrollbar-track {
+    background: #fff;
+  }
+  
+  /* Handle */
+  ::-webkit-scrollbar-thumb {
+    background: #DADCE0;
+    border-radius: 15px;
+  }
+  
+  /* Handle on hover */
+  ::-webkit-scrollbar-thumb:hover {
+    background: #9b9da1;
+  }

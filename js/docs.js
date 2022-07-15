@@ -58,6 +58,7 @@ async function getDocLastIndex(doc_id) {
 }
 
 async function editDoc(doc_id, edits) {
+    console.log('edits', edits)
     try {
         let response = await gapi.client.docs.documents.batchUpdate(
             {

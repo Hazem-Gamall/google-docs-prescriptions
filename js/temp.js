@@ -15,7 +15,7 @@ function getFormData(e) {
     }
 }
 
-function getFormData(e) {
+function getFormData2(e) {
     e.preventDefault();
 
     let gender = this.elements['gender'].value
@@ -46,7 +46,10 @@ function getFormData(e) {
     col2:[]
 }
 */
-function insertTable( {col1, col2, startIndex}) {
+
+import {insertText} from './modules/doc_update_utils.js'
+
+function insertTable2({ col1, col2, startIndex }) {
 
     let table_arr = []
     table_arr.push(
@@ -63,8 +66,8 @@ function insertTable( {col1, col2, startIndex}) {
     )
 
     let curr_index = startIndex
-    for(let i  = 0; i < col1.length; i++){
-        curr_index += i==0?4:3;
+    for (let i = 0; i < col1.length; i++) {
+        curr_index += i == 0 ? 4 : 3;
         table_arr.push(
             {
                 insertText: {
@@ -78,64 +81,104 @@ function insertTable( {col1, col2, startIndex}) {
 
         curr_index += col1[i].length + 2
 
-        table_arr.push(
-            {
-                insertText: {
-                    text: col2[i],
-                    location: {
-                        index: curr_index, // Modified
-                    },
-                }
-            },
+        table_arr = table_arr.concat(
+            // {
+            //     insertText: {
+            //         text: col2[i],
+            //         location: {
+            //             index: curr_index, // Modified
+            //         },
+            //     }
+            // },
+            // {
+            //     updateTextStyle: {
+            //         textStyle: {
+            //             bold: false,
+            //             underline: false,
+            //             fontSize: {
+            //                 magnitude: 12.0,
+            //                 unit: "PT"
+            //             },
+            //             weightedFontFamily: {
+            //                 fontFamily: "Times New Roman"
+            //             }
+            //         },
+            //         fields: "fontSize, weightedFontFamily, bold, underline",
+            //         range: {
+            //             startIndex: curr_index,
+            //             endIndex: curr_index + col2[i].length
+            //         }
+            //     }
+
+            // }
+            insertText({ startIndex: curr_index, text: col2[i] }, { bold: false, underline: false }).text_arr
         )
+        console.log(insertText({ startIndex: curr_index, text: col2[i] }, { bold: false, underline: false }).text_arr)
         curr_index += col2[i].length
 
     }
-    curr_index+=5
+    curr_index += 5
 
-    return {table_arr,curr_index};
+    return { table_arr, curr_index };
 }
 
-[
-    {
-        insertText: {
-            text: "gamed gedan",
-            location: {
-                index: monthly_med_table.startIndex + 4, // Modified
-            },
-        }
-    },
-    {
-        insertText: {
-            text: "gamed gedan",
-            location: {
-                index: monthly_med_table.startIndex + 4 + 2 + "gamed gedan".length, // Modified
-            },
-        }
-    },
-    {
-        insertText: {
-            text: "gamed",
-            location: {
-                index: monthly_med_table.startIndex + 4 + 2 + ("gamed gedan".length * 2) + 3, // Modified
-            },
-        }
-    },
+let table = {
+    "col1": [
+        "Plavix",
+        "Ator",
+        "Concor"
+    ],
+    "col2": [
+        "قرص بعد الإفطار ",
+        "قرص بعد الإفطار ",
+        "قرص بعد العشاء"
+    ],
+    "startIndex": 123
+}
 
-    {
-        insertText: {
-            text: "gamed",
-            location: {
-                index: monthly_med_table.startIndex + 4 + 2 + ("gamed gedan".length * 2) + 3 + "gamed".length + 2, // Modified
-            },
-        }
-    },
-    {
-        insertText: {
-            text: "gamed",
-            location: {
-                index: monthly_med_table.startIndex + 4 + 2 + ("gamed gedan".length * 2) + 3 + ("gamed".length * 2) + 2 + 3, // Modified
-            },
-        }
-    },
-]
+console.log(insertTable2(table))
+
+
+// [
+//     {
+//         insertText: {
+//             text: "gamed gedan",
+//             location: {
+//                 index: monthly_med_table.startIndex + 4, // Modified
+//             },
+//         }
+//     },
+//     {
+//         insertText: {
+//             text: "gamed gedan",
+//             location: {
+//                 index: monthly_med_table.startIndex + 4 + 2 + "gamed gedan".length, // Modified
+//             },
+//         }
+//     },
+//     {
+//         insertText: {
+//             text: "gamed",
+//             location: {
+//                 index: monthly_med_table.startIndex + 4 + 2 + ("gamed gedan".length * 2) + 3, // Modified
+//             },
+//         }
+//     },
+
+//     {
+//         insertText: {
+//             text: "gamed",
+//             location: {
+//                 index: monthly_med_table.startIndex + 4 + 2 + ("gamed gedan".length * 2) + 3 + "gamed".length + 2, // Modified
+//             },
+//         }
+//     },
+//     {
+//         insertText: {
+//             text: "gamed",
+//             location: {
+//                 index: monthly_med_table.startIndex + 4 + 2 + ("gamed gedan".length * 2) + 3 + ("gamed".length * 2) + 2 + 3, // Modified
+//             },
+//         }
+//     },
+// ]

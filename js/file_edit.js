@@ -77,7 +77,7 @@ function getFormData(e) {
 
 document.querySelector('form').onsubmit = getFormData
 
-import {insertTable, insertText, alignment, direction} from './modules/doc_update_utils.js'
+import {insertTable, insertText, insertPageBreak, alignment, direction, namedStyleType, DocHandler} from './modules/doc_update_utils.js'
 
 async function prepareDocumentEdits(fields) {
     let {
@@ -88,323 +88,67 @@ async function prepareDocumentEdits(fields) {
         required_scans, required_scans_arabic
     } = fields
     let last_index = await getDocLastIndex(file_id)
+    
     date = date.replaceAll('-', '/');
-    let gender_line = {};
-    gender_line.text = `${gender} / ${name}\n`;
-    gender_line.startIndex = last_index + 1
-    gender_line.endIndex = gender_line.startIndex + gender_line.text.length
 
-    let date_line = {}
-    date_line.text = `${date}\n`
-    date_line.startIndex = gender_line.endIndex + 1
-    date_line.endIndex = date_line.startIndex + date_line.text.length
+    let edits = []
+    let index;
+    let doc_handler = new DocHandler(1);
+    console.log('doc_handler', doc_handler)
+    let text_ob;
+    edits = edits.concat(
+        insertPageBreak(last_index),
 
-    let diagnosis_line = {}
-    diagnosis_line.text = `Diagnosis: ${diagnosis}\n`
-    diagnosis_line.startIndex = date_line.endIndex
-    diagnosis_line.endIndex = diagnosis_line.startIndex + diagnosis_line.text.length
+        );
 
-    let monthly_med_line = {}
-    monthly_med_line.text = 'علاج شهري\n';
-    monthly_med_line.startIndex = diagnosis_line.endIndex
-    monthly_med_line.endIndex = monthly_med_line.startIndex + monthly_med_line.text.length
+    text_ob = insertText({startIndex:last_index+1,text:`${gender} / ${name}\n`}, {bold:true, alignment:alignment.center, direction:direction.right_to_left});
+    edits.push(...text_ob.text_arr);
 
-    let monthly_med_table = {}
-    monthly_med_table.col1 = monthly_med
-    monthly_med_table.col2 = monthly_med_freq
-    monthly_med_table.startIndex = monthly_med_line.endIndex
+    text_ob = insertText({startIndex:text_ob.curr_index, text:`${date}\n`}, {bold:true, direction:direction.right_to_left, alignment:alignment.start, namedStyleType:namedStyleType.heading_2});
+    edits.push(...text_ob.text_arr);
+
+    text_ob = insertText({startIndex:text_ob.curr_index,text:`Diagnosis: ${diagnosis}\n`}, {alignment:alignment.center, direction:direction.left_to_right})
+    edits.push(...text_ob.text_arr);
+
+    text_ob = insertText({startIndex:text_ob.curr_index,text:'\nعلاج شهري'}, {bold:true, underline:true, alignment:alignment.start, direction:direction.right_to_left})
+    edits.push(...text_ob.text_arr);
 
 
-    console.log('gender line', gender_line)
-    console.log('date line', date_line)
-    console.log('diagnosis line', diagnosis_line);
-    console.log('monthly med table', monthly_med_table);
-
-    let edits = [
-        {
-            updateDocumentStyle: {
-                documentStyle: {
-                    pageSize: {
-                        height: {
-                            magnitude: 595.2755905511812,
-                            unit: "PT"
-                        },
-                        width: {
-                            magnitude: 419.52755905511816,
-                            unit: "PT"
-                        }
-                    },
-                    marginTop: {
-                        magnitude: 70.56,
-                        unit: "PT"
-                    },
-                    marginBottom: {
-                        magnitude: 72,
-                        unit: "PT"
-                    },
-                    marginRight: {
-                        magnitude: 56.88,
-                        unit: "PT"
-                    },
-                    marginLeft: {
-                        magnitude: 56.88,
-                        unit: "PT"
-                    }
-                },
-                fields: "pageSize,marginTop,marginBottom,marginRight,marginLeft"
-
-            }
-        },
-
-        {
-            insertPageBreak: {
-                location: {
-                    index: last_index
-                }
-            }
-        },
-
-        {
-            insertText: {
-                text: gender_line.text,
-                location: {
-                    index: gender_line.startIndex, // Modified
-                },
-            }
-
-        },
-
-        {
-            updateParagraphStyle: {
-                paragraphStyle: {
-                    direction: "RIGHT_TO_LEFT",
-                    alignment: "CENTER"
-                },
-                fields: "direction, alignment",
-                range: {
-                    startIndex: gender_line.startIndex,
-                    endIndex: gender_line.endIndex
-                }
-            }
-        },
-        {
-            updateTextStyle: {
-                textStyle: {
-                    bold: true,
-                    fontSize: {
-                        magnitude: 12.0,
-                        unit: "PT"
-                    }
-                },
-                fields: "bold,fontSize",
-                range: {
-                    startIndex: gender_line.startIndex,
-                    endIndex: gender_line.endIndex
-                }
-            }
-        },
-
-        {
-            insertText: {
-                text: date_line.text,
-                location: {
-                    index: date_line.startIndex, // Modified
-                },
-            },
-        },
-
-        {
-            updateParagraphStyle: {
-                paragraphStyle: {
-                    namedStyleType: "HEADING_2",
-                    direction: "RIGHT_TO_LEFT",
-                    alignment: "START"
-                },
-                fields: "namedStyleType, direction, alignment",
-                range: {
-                    startIndex: date_line.startIndex,
-                    endIndex: date_line.endIndex
-                }
-            }
-        },
-
-        {
-            updateTextStyle: {
-                textStyle: {
-                    bold: true,
-                    fontSize: {
-                        magnitude: 12.0,
-                        unit: "PT"
-                    },
-                    weightedFontFamily: {
-                        fontFamily: "Times New Roman"
-                    },
-                    backgroundColor: {
-                        color: {
-                            rgbColor: {
-                                red: 255,
-                                green: 255,
-                                blue: 255
-                            }
-                        }
-                    }
-                },
-                fields: "bold, weightedFontFamily, fontSize",
-                range: {
-                    startIndex: date_line.startIndex,
-                    endIndex: date_line.endIndex
-                }
-            }
-
-        },
-        {
-            insertText: {
-                text: diagnosis_line.text,
-                location: {
-                    index: diagnosis_line.startIndex, // Modified
-                },
-            }
-
-        },
-
-        {
-            updateTextStyle: {
-                textStyle: {
-                    fontSize: {
-                        magnitude: 12.0,
-                        unit: "PT"
-                    },
-                    weightedFontFamily: {
-                        fontFamily: "Times New Roman"
-                    }
-                },
-                fields: "fontSize, weightedFontFamily",
-                range: {
-                    startIndex: diagnosis_line.startIndex,
-                    endIndex: diagnosis_line.endIndex
-                }
-            }
-
-        },
-
-        {
-            updateParagraphStyle: {
-                paragraphStyle: {
-                    alignment: "CENTER"
-                },
-                fields: "alignment",
-                range: {
-                    startIndex: diagnosis_line.startIndex,
-                    endIndex: diagnosis_line.endIndex
-                }
-            }
-        },
-
-        {
-            insertText: {
-                text: monthly_med_line.text,
-                location: {
-                    index: monthly_med_line.startIndex, // Modified
-                },
-            }
-        },
-
-        {
-            updateParagraphStyle: {
-                paragraphStyle: {
-                    alignment: "START",
-                    direction: "RIGHT_TO_LEFT",
-
-                },
-                fields: "alignment, direction",
-                range: {
-                    startIndex: monthly_med_line.startIndex,
-                    endIndex: monthly_med_line.endIndex
-                }
-            }
-        },
-
-        {
-            updateTextStyle: {
-                textStyle: {
-                    bold: true,
-                    underline: true,
-                    fontSize: {
-                        magnitude: 12.0,
-                        unit: "PT"
-                    },
-                    weightedFontFamily: {
-                        fontFamily: "Times New Roman"
-                    }
-                },
-                fields: "fontSize, weightedFontFamily, bold, underline",
-                range: {
-                    startIndex: monthly_med_line.startIndex,
-                    endIndex: monthly_med_line.endIndex
-                }
-            }
-
-        },
-
-    ]
     let table_arr,curr_index
-    ({table_arr, curr_index} = insertTable(monthly_med_table))
-    edits = edits.concat(table_arr);
-    console.log(curr_index)
-
-    let text_ob = insertText({startIndex:curr_index+2,text:'علاج مؤقت\n'}, {bold:true, underline:true, alignment:alignment.start, direction:direction.right_to_left})
-
-    edits = edits.concat(text_ob.text_arr);
-
-    let temp_med_table = {}
-    temp_med_table.col1 = temp_med
-    temp_med_table.col2 = temp_med_freq
-    temp_med_table.startIndex = text_ob.curr_index
-
+    ({table_arr, curr_index} = insertTable({col1:monthly_med, col2:monthly_med_freq, startIndex:text_ob.curr_index}))
+    edits.push(...table_arr);
     
 
-    let ob = insertTable(temp_med_table);
-    edits = edits.concat(ob.table_arr);
-    console.log(ob.curr_index)
-    console.log(ob.table_arr)
+    text_ob = insertText({startIndex:curr_index+2,text:'\nعلاج مؤقت'}, {bold:true, underline:true, alignment:alignment.start, direction:direction.right_to_left})
 
-    text_ob = insertText({startIndex:ob.curr_index+2,text:'المطلوب:\n\nالتحاليل الاتية:\n'}, {bold:true, underline:true, alignment:alignment.start, direction:direction.right_to_left})
-
-    edits = edits.concat(text_ob.text_arr);
-
-    let required_tests_table = {}
-    required_tests_table.col1 = required_tests.slice(0,required_tests.length/2)
-    required_tests_table.col2 = required_tests.slice(required_tests.length/2)
-    required_tests_table.startIndex = text_ob.curr_index
-
-    ob = insertTable(required_tests_table);
-    edits = edits.concat(ob.table_arr);
-    console.log(ob.curr_index)
-    console.log(ob.table_arr)
-
-    text_ob = insertText({startIndex:ob.curr_index+2,text:'الاشعات الاتية:\n'}, {bold:true, underline:true, alignment:alignment.start, direction:direction.right_to_left})
-    edits = edits.concat(text_ob.text_arr);
+    edits.push(...text_ob.text_arr);
 
 
-    let required_scans_table = {}
-    required_scans_table.col1 = required_scans
-    required_scans_table.col2 = required_scans_arabic
-    required_scans_table.startIndex = text_ob.curr_index
+    let ob = insertTable({col1:temp_med, col2:temp_med_freq, startIndex:text_ob.curr_index});
+    edits.push(...ob.table_arr);
 
-    ob = insertTable(required_scans_table);
-    edits = edits.concat(ob.table_arr);
-    console.log(ob.curr_index)
-    console.log(ob.table_arr)
+    text_ob = insertText({startIndex:ob.curr_index+2,text:'\nالمطلوب:\n\nالتحاليل الاتية:'}, {bold:true, underline:true, alignment:alignment.start, direction:direction.right_to_left})
+
+    edits.push(...text_ob.text_arr);
+
+    ob = insertTable({col1:required_tests.slice(0,required_tests.length/2), col2:required_tests.slice(required_tests.length/2), startIndex:text_ob.curr_index});
+    edits.push(...ob.table_arr);
+
+    text_ob = insertText({startIndex:ob.curr_index+2,text:'\nالاشعات الاتية:'}, {bold:true, underline:true, alignment:alignment.start, direction:direction.right_to_left})
+    edits.push(...text_ob.text_arr);
 
 
-    text_ob = insertText({startIndex:ob.curr_index+2,text:'ملاحظات:\n'}, {bold:true, underline:true, alignment:alignment.start, direction:direction.right_to_left})
+    ob = insertTable({col1:required_scans, col2:required_scans_arabic, startIndex:text_ob.curr_index});
+    edits.push(...ob.table_arr);
 
-    edits = edits.concat(text_ob.text_arr);
+    text_ob = insertText({startIndex:ob.curr_index+2,text:'\nملاحظات:\n'}, {bold:true, underline:true, alignment:alignment.start, direction:direction.right_to_left})
+
+    edits.push(...text_ob.text_arr);
 
     text_ob = insertText({startIndex:text_ob.curr_index,text:notes}, {direction:direction.right_to_left, alignment:alignment.start})
 
-    edits = edits.concat(text_ob.text_arr);
-
+    edits.push(...text_ob.text_arr);
+    console.log(edits)
     editDoc(file_id, edits)
 
 
