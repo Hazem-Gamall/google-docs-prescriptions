@@ -93,62 +93,81 @@ async function prepareDocumentEdits(fields) {
 
     let edits = []
     let index;
-    let doc_handler = new DocHandler(1);
+    let doc_handler = new DocHandler(last_index);
     console.log('doc_handler', doc_handler)
-    let text_ob;
-    edits = edits.concat(
-        insertPageBreak(last_index),
+    doc_handler.insertText('etsetset',{bold:true})
+    edits.push(
+        doc_handler.insertPageBreak(),
+        ...doc_handler.insertText(`${gender} / ${name}\n`, {bold:true, alignment:alignment.center, direction:direction.right_to_left}),
+        ...doc_handler.insertText(`${date}\n`, {bold:true, direction:direction.right_to_left, alignment:alignment.start, namedStyleType:namedStyleType.heading_2}),
+        ...doc_handler.insertText(`Diagnosis: ${diagnosis}\n`, {alignment:alignment.center, direction:direction.left_to_right}),
+        ...doc_handler.insertText('\nعلاج شهري', {bold:true, underline:true, alignment:alignment.start, direction:direction.right_to_left}),
+        ...doc_handler.insertTable({col1:monthly_med, col2:monthly_med_freq}),
+        ...doc_handler.insertText('\nعلاج مؤقت', {bold:true, underline:true, alignment:alignment.start, direction:direction.right_to_left}),
+        ...doc_handler.insertTable({col1:temp_med, col2:temp_med_freq}),
+        ...doc_handler.insertText('\nالمطلوب:\n\nالتحاليل الاتية:', {bold:true, underline:true, alignment:alignment.start, direction:direction.right_to_left}),
+        ...doc_handler.insertTable({col1:required_tests.slice(0,required_tests.length/2), col2:required_tests.slice(required_tests.length/2)}),
+        ...doc_handler.insertText('\nالاشعات الاتية:', {bold:true, underline:true, alignment:alignment.start, direction:direction.right_to_left}),
+        ...doc_handler.insertTable({col1:required_scans, col2:required_scans_arabic}),
+        ...doc_handler.insertText('\nملاحظات:\n', {bold:true, underline:true, alignment:alignment.start, direction:direction.right_to_left}),
+        ...doc_handler.insertText(notes, {direction:direction.right_to_left, alignment:alignment.start})
+    )
 
-        );
+    console.log('edits', edits)
+    // let text_ob;
+    // edits = edits.concat(
+    //     insertPageBreak(last_index),
 
-    text_ob = insertText({startIndex:last_index+1,text:`${gender} / ${name}\n`}, {bold:true, alignment:alignment.center, direction:direction.right_to_left});
-    edits.push(...text_ob.text_arr);
+    //     );
 
-    text_ob = insertText({startIndex:text_ob.curr_index, text:`${date}\n`}, {bold:true, direction:direction.right_to_left, alignment:alignment.start, namedStyleType:namedStyleType.heading_2});
-    edits.push(...text_ob.text_arr);
+    // text_ob = insertText({startIndex:last_index+1,text:`${gender} / ${name}\n`}, {bold:true, alignment:alignment.center, direction:direction.right_to_left});
+    // edits.push(...text_ob.text_arr);
 
-    text_ob = insertText({startIndex:text_ob.curr_index,text:`Diagnosis: ${diagnosis}\n`}, {alignment:alignment.center, direction:direction.left_to_right})
-    edits.push(...text_ob.text_arr);
+    // text_ob = insertText({startIndex:text_ob.curr_index, text:`${date}\n`}, {bold:true, direction:direction.right_to_left, alignment:alignment.start, namedStyleType:namedStyleType.heading_2});
+    // edits.push(...text_ob.text_arr);
 
-    text_ob = insertText({startIndex:text_ob.curr_index,text:'\nعلاج شهري'}, {bold:true, underline:true, alignment:alignment.start, direction:direction.right_to_left})
-    edits.push(...text_ob.text_arr);
+    // text_ob = insertText({startIndex:text_ob.curr_index,text:`Diagnosis: ${diagnosis}\n`}, {alignment:alignment.center, direction:direction.left_to_right})
+    // edits.push(...text_ob.text_arr);
+
+    // text_ob = insertText({startIndex:text_ob.curr_index,text:'\nعلاج شهري'}, {bold:true, underline:true, alignment:alignment.start, direction:direction.right_to_left})
+    // edits.push(...text_ob.text_arr);
 
 
-    let table_arr,curr_index
-    ({table_arr, curr_index} = insertTable({col1:monthly_med, col2:monthly_med_freq, startIndex:text_ob.curr_index}))
-    edits.push(...table_arr);
+    // let table_arr,curr_index
+    // ({table_arr, curr_index} = insertTable({col1:monthly_med, col2:monthly_med_freq, startIndex:text_ob.curr_index}))
+    // edits.push(...table_arr);
     
 
-    text_ob = insertText({startIndex:curr_index+2,text:'\nعلاج مؤقت'}, {bold:true, underline:true, alignment:alignment.start, direction:direction.right_to_left})
+    // text_ob = insertText({startIndex:curr_index+2,text:'\nعلاج مؤقت'}, {bold:true, underline:true, alignment:alignment.start, direction:direction.right_to_left})
 
-    edits.push(...text_ob.text_arr);
-
-
-    let ob = insertTable({col1:temp_med, col2:temp_med_freq, startIndex:text_ob.curr_index});
-    edits.push(...ob.table_arr);
-
-    text_ob = insertText({startIndex:ob.curr_index+2,text:'\nالمطلوب:\n\nالتحاليل الاتية:'}, {bold:true, underline:true, alignment:alignment.start, direction:direction.right_to_left})
-
-    edits.push(...text_ob.text_arr);
-
-    ob = insertTable({col1:required_tests.slice(0,required_tests.length/2), col2:required_tests.slice(required_tests.length/2), startIndex:text_ob.curr_index});
-    edits.push(...ob.table_arr);
-
-    text_ob = insertText({startIndex:ob.curr_index+2,text:'\nالاشعات الاتية:'}, {bold:true, underline:true, alignment:alignment.start, direction:direction.right_to_left})
-    edits.push(...text_ob.text_arr);
+    // edits.push(...text_ob.text_arr);
 
 
-    ob = insertTable({col1:required_scans, col2:required_scans_arabic, startIndex:text_ob.curr_index});
-    edits.push(...ob.table_arr);
+    // let ob = insertTable({col1:temp_med, col2:temp_med_freq, startIndex:text_ob.curr_index});
+    // edits.push(...ob.table_arr);
 
-    text_ob = insertText({startIndex:ob.curr_index+2,text:'\nملاحظات:\n'}, {bold:true, underline:true, alignment:alignment.start, direction:direction.right_to_left})
+    // text_ob = insertText({startIndex:ob.curr_index+2,text:'\nالمطلوب:\n\nالتحاليل الاتية:'}, {bold:true, underline:true, alignment:alignment.start, direction:direction.right_to_left})
 
-    edits.push(...text_ob.text_arr);
+    // edits.push(...text_ob.text_arr);
 
-    text_ob = insertText({startIndex:text_ob.curr_index,text:notes}, {direction:direction.right_to_left, alignment:alignment.start})
+    // ob = insertTable({col1:required_tests.slice(0,required_tests.length/2), col2:required_tests.slice(required_tests.length/2), startIndex:text_ob.curr_index});
+    // edits.push(...ob.table_arr);
 
-    edits.push(...text_ob.text_arr);
-    console.log(edits)
+    // text_ob = insertText({startIndex:ob.curr_index+2,text:'\nالاشعات الاتية:'}, {bold:true, underline:true, alignment:alignment.start, direction:direction.right_to_left})
+    // edits.push(...text_ob.text_arr);
+
+
+    // ob = insertTable({col1:required_scans, col2:required_scans_arabic, startIndex:text_ob.curr_index});
+    // edits.push(...ob.table_arr);
+
+    // text_ob = insertText({startIndex:ob.curr_index+2,text:'\nملاحظات:\n'}, {bold:true, underline:true, alignment:alignment.start, direction:direction.right_to_left})
+
+    // edits.push(...text_ob.text_arr);
+
+    // text_ob = insertText({startIndex:text_ob.curr_index,text:notes}, {direction:direction.right_to_left, alignment:alignment.start})
+
+    // edits.push(...text_ob.text_arr);
+    // console.log(edits)
     editDoc(file_id, edits)
 
 

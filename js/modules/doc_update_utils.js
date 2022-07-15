@@ -7,10 +7,10 @@ function DocHandler(index){
 }
 
 
-function insertTable({ col1, col2, startIndex }) {
+function insertTable({ col1, col2 }) {
     console.log('col1', col1)
     console.log('col2', col2)
-    console.log('startIndex', startIndex)
+    console.log('this curr_index', this.curr_index)
 
     let table_arr = []
     table_arr.push(
@@ -19,7 +19,7 @@ function insertTable({ col1, col2, startIndex }) {
                 rows: col1.length,
                 columns: 2,
                 location: {
-                    index: startIndex
+                    index: this.curr_index
                 },
 
             }
@@ -27,23 +27,23 @@ function insertTable({ col1, col2, startIndex }) {
 
     )
 
-    let curr_index = startIndex
+
     for (let i = 0; i < col1.length; i++) {
-        curr_index += i == 0 ? 4 : 3;
-        table_arr = table_arr.concat(
-            insertText({ startIndex: curr_index, text: col1[i] }, { bold: false, underline: false }).text_arr
+        this.curr_index += (i == 0 ? 4 : 3);
+        table_arr.push(
+            ...this.insertText(col1[i] , { bold: false, underline: false })
         )
 
-        curr_index += col1[i].length + 2
+        this.curr_index +=  2
 
-        table_arr = table_arr.concat(
-            insertText({ startIndex: curr_index, text: col2[i] }, { bold: false, underline: false }).text_arr
+        table_arr.push(
+            ...this.insertText(col2[i], { bold: false, underline: false })
         )
-        curr_index += col2[i].length
 
     }
     // console.log('table arr', table_arr)
-    return { table_arr, curr_index };
+    this.curr_index += 2
+    return table_arr;
 }
 
 
@@ -72,12 +72,12 @@ const namedStyleType = {
 }
 
 
-function insertText({ startIndex, text }, { alignment, direction, bold, underline, namedStyleType }) {
+function insertText(text , { alignment, direction, bold, underline, namedStyleType }) {
     let text_arr = [{
         insertText: {
             text: text,
             location: {
-                index: startIndex, // Modified
+                index: this.curr_index, // Modified
             },
         }
     },
@@ -92,8 +92,8 @@ function insertText({ startIndex, text }, { alignment, direction, bold, underlin
             },
             fields: "alignment, direction" + (namedStyleType ? ", namedStyleType" : ""),
             range: {
-                startIndex: startIndex,
-                endIndex: startIndex + text.length
+                startIndex: this.curr_index,
+                endIndex: this.curr_index + text.length
             }
         }
     },
@@ -113,23 +113,24 @@ function insertText({ startIndex, text }, { alignment, direction, bold, underlin
             },
             fields: "fontSize, weightedFontFamily, bold, underline",
             range: {
-                startIndex: startIndex,
-                endIndex: startIndex + text.length
+                startIndex: this.curr_index,
+                endIndex: this.curr_index + text.length
             }
         }
 
     }]
 
     // console.log(text_arr)
-    return { text_arr, curr_index: startIndex + text.length };
+    this.curr_index += text.length ;
+    return text_arr;
 
 }
 
-function insertPageBreak(index) {
+function insertPageBreak() {
     let page_break = {
         insertPageBreak: {
             location: {
-                index: index
+                index: this.curr_index
             }
         }
     }
