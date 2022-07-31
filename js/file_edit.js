@@ -3,11 +3,23 @@ let url_params = new URLSearchParams(location.search)
 let file_id = url_params.get('file_id')
 if (file_id) {
     console.log('file_id', file_id)
+
+
+    // console.log('hello document');
+    document.querySelector('[name="name"]').onclick = async function () {
+        let { name: file_name } = await getFile(file_id, 'name');
+        console.log('file_name', file_name)
+        this.value = file_name
+    }
+
+
     let file_id_input = document.createElement('input');
+
     file_id_input.name = 'file_id'
     file_id_input.value = file_id
     file_id_input.hidden = true
     document.querySelector('form').append(file_id_input)
+
 }
 
 var scans_lookup = {
@@ -24,98 +36,133 @@ Object.keys(scans_lookup).forEach((scan) => {
     scans_datalist.append(option)
 })
 
-document.querySelectorAll('table').forEach((table) => addTableRow(table.id))
+// document.querySelectorAll('table').forEach((table) => addTableRow(table.id))
 document.body.append(scans_datalist);
 
-function getFormData(e) {
+let dialog = document.querySelector('dialog');
+
+document.querySelectorAll('.close-dialog').forEach((btn) => btn.onclick = closeDialog)
+
+
+function openDialog() {
+    dialog.showModal();
+}
+function closeDialog() {
+    dialog.close();
+}
+
+function editDialog(header, html) {
+    document.querySelector('#dialog-header').textContent = header
+    document.querySelector('#dialog-text').innerHTML = html
+}
+
+
+
+async function getFormData(e) {
     e.preventDefault();
 
-    let gender = this.elements['gender'].value
-    let name = this.elements['name'].value
-    let date = this.elements['date'].value
-    let diagnosis = this.elements['diagnosis'].value
-    let file_id = this.elements['file_id'].value
-    let notes = this.elements['notes'].value
-
-    let monthly_med_arr = Array.from(this.elements['monthly-med'], (element) => element.value);
-    console.log('monhtly med arr', monthly_med_arr)
-    let monthly_med = monthly_med_arr.length ? monthly_med_arr : [this.elements['monthly-med'].value]
-
-    let monthly_med_freq_arr = Array.from(this.elements['monthly-med-freq'], (element) => element.value)
-    let monthly_med_freq = monthly_med_freq_arr.length ? monthly_med_freq_arr : [this.elements['monthly-med-freq'].value]
-    let temp_med_arr = Array.from(this.elements['temp-med'], (element) => element.value)
-    let temp_med = temp_med_arr.length ? temp_med_arr : [this.elements['temp-med'].value]
-
-    let temp_med_freq_arr = Array.from(this.elements['temp-med-freq'], (element) => element.value)
-    let temp_med_freq = temp_med_freq_arr.length ? temp_med_freq_arr : [this.elements['temp-med-freq'].value]
-    let required_tests_arr = Array.from(this.elements['required-tests'], (element) => element.value)
-    let required_tests = required_tests_arr.length ? required_tests_arr : [this.elements['required-tests'].value]
-
-    let required_scans_array = Array.from(this.elements['required-scans'], (element) => element.value)
-    let required_scans = required_scans_array.length ? required_scans_array : [this.elements['required-scans'].value]
-    let required_scans_arabic_arr = Array.from(this.elements['required-scans-ar'], (element) => element.value)
-    let required_scans_arabic = required_scans_arabic_arr.length ? required_scans_arabic_arr : [this.elements['required-scans-ar'].value]
-
-    let ob = {
-        gender, name, date, diagnosis,
-        monthly_med, monthly_med_freq,
-        temp_med, temp_med_freq, notes,
-        required_tests, file_id,
-        required_scans, required_scans_arabic
+    let form_data = {
+        text: {
+            date: "", diagnosis: "",
+            file_id: "", gender: "",
+            name: "", notes: "",
+        },
+        arrays: {
+            monthly_med: "", monthly_med_freq: "",
+            required_scans: "", required_scans_ar: "",
+            temp_med: "", temp_med_freq: "",
+            required_tests: "",
+        }
     }
 
-
-    for (const field in ob) {
-        console.log(field, ob[field])
+    console.log('form elements', this.elements)
+    const elements = this.elements
+    for (const name in form_data.text) {
+        console.log('name:', name)
+        console.log('value:', elements[name].value)
+        form_data.text[name] = elements[name].value || ' '
+    }
+    for (const name in form_data.arrays) {
+        const element = elements[name]
+        console.log('name:', name)
+        console.log('array:', elements[name])
+        form_data.arrays[name] = element && (element.length ? Array.from(element, (el) => el.value) : [element.value])
     }
 
-    prepareDocumentEdits(ob);
+    console.log('form data after loops', form_data)
+
+    openDialog();
+    editDialog("", "Loading...")
+    try {
+        await prepareDocumentEdits(form_data);
+        editDialog("Document", `<iframe width="800" height="1000" src=https://docs.google.com/document/d/${file_id}></iframe>`)
+
+    } catch (e) {
+        console.log(e)
+        if (e.status === 401 || e.status === 403) {
+            handleAuthClick(async () => {
+                console.log('de7kawy')
+                await prepareDocumentEdits(form_data);
+                editDialog("Document", `<iframe width="800" height="1000" src=https://docs.google.com/document/d/${file_id}></iframe>`)
+            }
+            );
+
+        } else {
+            console.log('error', e)
+            editDialog("Error", e.result.error.message)
+        }
+    }
 
 
 }
 
 
+
 document.querySelector('form').onsubmit = getFormData
 
-import {insertTable, insertText, insertPageBreak, alignment, direction, namedStyleType, DocHandler} from './modules/doc_update_utils.js'
+import { alignment, direction, namedStyleType, DocHandler } from './modules/doc_update_utils.js'
 
-async function prepareDocumentEdits(fields) {
-    let {
-        gender, name, date, diagnosis,
-        monthly_med, monthly_med_freq,
-        temp_med, temp_med_freq, notes,
-        required_tests, file_id,
-        required_scans, required_scans_arabic
-    } = fields
+async function prepareDocumentEdits(form_data) {
+    let { monthly_med, monthly_med_freq,
+        required_scans, required_scans_ar: required_scans_arabic,
+        temp_med, temp_med_freq,
+        required_tests } = form_data.arrays
+
+    let { date, diagnosis,
+        file_id, gender,
+        name, notes } = form_data.text
     let last_index = await getDocLastIndex(file_id)
-    
+
+
     date = date.replaceAll('-', '/');
 
-    let edits = []
-    let index;
+
     let doc_handler = new DocHandler(last_index);
-    console.log('doc_handler', doc_handler)
-    doc_handler.insertText('etsetset',{bold:true})
-    edits.push(
+    let reduce_counter = 1
+    let required_tests_string = required_tests.reduce(
+        (test_string, curr_test) => test_string + `   ${curr_test}`)
+
+    let edits = [].concat(
         doc_handler.insertPageBreak(),
-        ...doc_handler.insertText(`${gender} / ${name}\n`, {bold:true, alignment:alignment.center, direction:direction.right_to_left}),
-        ...doc_handler.insertText(`${date}\n`, {bold:true, direction:direction.right_to_left, alignment:alignment.start, namedStyleType:namedStyleType.heading_2}),
-        ...doc_handler.insertText(`Diagnosis: ${diagnosis}\n`, {alignment:alignment.center, direction:direction.left_to_right}),
-        ...doc_handler.insertText('\nعلاج شهري', {bold:true, underline:true, alignment:alignment.start, direction:direction.right_to_left}),
-        ...doc_handler.insertTable({col1:monthly_med, col2:monthly_med_freq}),
-        ...doc_handler.insertText('\nعلاج مؤقت', {bold:true, underline:true, alignment:alignment.start, direction:direction.right_to_left}),
-        ...doc_handler.insertTable({col1:temp_med, col2:temp_med_freq}),
-        ...doc_handler.insertText('\nالمطلوب:\n\nالتحاليل الاتية:', {bold:true, underline:true, alignment:alignment.start, direction:direction.right_to_left}),
-        ...doc_handler.insertTable({col1:required_tests.slice(0,required_tests.length/2), col2:required_tests.slice(required_tests.length/2)}),
-        ...doc_handler.insertText('\nالاشعات الاتية:', {bold:true, underline:true, alignment:alignment.start, direction:direction.right_to_left}),
-        ...doc_handler.insertTable({col1:required_scans, col2:required_scans_arabic}),
-        ...doc_handler.insertText('\nملاحظات:\n', {bold:true, underline:true, alignment:alignment.start, direction:direction.right_to_left}),
-        ...doc_handler.insertText(notes, {direction:direction.right_to_left, alignment:alignment.start})
+        doc_handler.insertText(`${gender} / ${name}\n`, { bold: true, alignment: alignment.center, direction: direction.right_to_left }),
+        doc_handler.insertText(`${date}\n`, { bold: true, direction: direction.right_to_left, alignment: alignment.start, namedStyleType: namedStyleType.heading_2 }),
+        doc_handler.insertText(`Diagnosis: ${diagnosis}\n`, { alignment: alignment.center, direction: direction.left_to_right }),
+        monthly_med && doc_handler.insertText('\nعلاج شهري', { bold: true, underline: true, alignment: alignment.start, direction: direction.right_to_left }),
+        monthly_med && doc_handler.insertTable({ col1: monthly_med, col2: monthly_med_freq }),
+        temp_med && doc_handler.insertText('\nعلاج مؤقت', { bold: true, underline: true, alignment: alignment.start, direction: direction.right_to_left }),
+        temp_med && doc_handler.insertTable({ col1: temp_med, col2: temp_med_freq }),
+        (required_tests || required_scans) && doc_handler.insertText('\nالمطلوب:', { bold: true, underline: true, alignment: alignment.start, direction: direction.right_to_left }),
+        required_tests && doc_handler.insertText('\nالتحاليل الاتية:\n', { bold: true, underline: true, alignment: alignment.start, direction: direction.right_to_left }),
+        required_tests && doc_handler.insertText(required_tests_string + '\n', { alignment: alignment.start, direction: direction.left_to_right }),
+        // required_tests && doc_handler.insertTable({ col1: required_tests.slice(0, required_tests.length / 2), col2: required_tests.slice(required_tests.length / 2) }),
+        required_scans && doc_handler.insertText('\nالاشعات الاتية:\n', { bold: true, underline: true, alignment: alignment.start, direction: direction.right_to_left }),
+        required_scans && doc_handler.insertTable({ col1: required_scans, col2: required_scans_arabic }),
+        doc_handler.insertText('\nملاحظات:\n', { bold: true, underline: true, alignment: alignment.start, direction: direction.right_to_left }),
+        doc_handler.insertText(notes, { direction: direction.right_to_left, alignment: alignment.start })
     )
 
     console.log('edits', edits)
-    
-    editDoc(file_id, edits)
+    await editDoc(file_id, edits)
 
 
     console.log('last_index', last_index);
@@ -132,24 +179,24 @@ function getInputFieldData(table_id) {
         case "monthly-med":
             list_id1 = 'monthly-med-list'
             list_id2 = 'monthly-med-freq-list'
-            name1 = `monthly-med`
-            name2 = `monthly-med-freq`
+            name1 = `monthly_med`
+            name2 = `monthly_med_freq`
             break;
         case "temp-med":
             list_id1 = 'temp-med-list'
             list_id2 = 'temp-med-freq-list'
-            name1 = 'temp-med'
-            name2 = 'temp-med-freq'
+            name1 = 'temp_med'
+            name2 = 'temp_med_freq'
             break;
 
         case "required-tests":
             list_id1 = list_id2 = 'required-tests-list'
-            name1 = name2 = 'required-tests'
+            name1 = name2 = 'required_tests'
             break;
         case "required-scans":
             list_id1 = 'required-scans-list'
-            name1 = 'required-scans'
-            name2 = 'required-scans-ar'
+            name1 = 'required_scans'
+            name2 = 'required_scans_ar'
             break;
 
     }

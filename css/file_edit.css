@@ -17,6 +17,12 @@ table input{
 border: none !important;
 }
 
+dialog{
+    border-radius: 20px;
+    width: 100% !important;
+    height: 100% !important;
+}
+
 .ar-input{
     direction: rtl;
 }

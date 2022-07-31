@@ -1,10 +1,3 @@
-function DocHandler(index){
-    this.curr_index = index
-    this.insertTable = insertTable
-    this.insertPageBreak = insertPageBreak
-    this.insertText = insertText
-    this.updateDocumentStyle = updateDocumentStyle
-}
 
 
 function insertTable({ col1, col2 }) {
@@ -134,6 +127,7 @@ function insertPageBreak() {
             }
         }
     }
+    this.curr_index+=1
 
     return page_break;
 }
@@ -177,12 +171,17 @@ function updateDocumentStyle() {
     return document_style
 }
 
+function DocHandler(index){
+    this.curr_index = index
+    this.insertTable = insertTable
+    this.insertPageBreak = insertPageBreak
+    this.insertText = insertText
+    this.updateDocumentStyle = updateDocumentStyle
+}
+
+
 export {
     DocHandler,
-    insertTable,
-    insertText,
-    insertPageBreak,
-    updateDocumentStyle,
     alignment,
     direction,
     namedStyleType

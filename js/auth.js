@@ -21,6 +21,12 @@ let tokenClient;
 let gapiInited = false;
 let gisInited = false;
 
+// let api_ready_callback;
+
+// function setApiCallback(callback){
+//     api_ready_callback = callback;
+// }
+
 //   document.getElementById('authorize_button').style.visibility = 'hidden';
 //   document.getElementById('signout_button').style.visibility = ' hidden';
 
@@ -29,6 +35,7 @@ let gisInited = false;
  */
 function gapiLoaded() {
     gapi.load('client', intializeGapiClient);
+    gapiInited = true;
 }
 
 /**
@@ -46,6 +53,7 @@ async function intializeGapiClient() {
         session_token = JSON.parse(session_token);
         gapi.client.setToken(session_token)
     }
+
 }
 
 /**
@@ -60,7 +68,6 @@ function gisLoaded() {
     });
     gisInited = true;
 
-    
 }
 
 
@@ -68,11 +75,12 @@ function gisLoaded() {
 /**
  * Enables user interaction after all libraries are loaded.
  */
-function setToken() {
-    if (gapiInited && gisInited) {
-        // document.getElementById('authorize_button').style.visibility = 'visible';
-    }
-}
+// function apiReady() {
+//     if (gapiInited && gisInited) {
+//         console.log('api')
+//         api_ready_callback()
+//     }
+// }
 
 /**
  *  Sign in the user upon button click.

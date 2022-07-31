@@ -11,6 +11,11 @@
 </head>
 
 <body>
+
+  <datalist id="file-search-list">
+
+  </datalist>
+
   <dialog>
     <div class="container p-0 m-0">
       <div class="row justify-content-end mb-3">
@@ -41,7 +46,7 @@
           <div class="row justify-content-center my-3">
             <div class="col-7">
               <div class="form-group">
-                <input class='form-control' type="text" name="file-name" id="file-name" placeholder="File Name">
+                <input class='form-control' type="search" name="file-name" id="file-name" placeholder="File Name" list="file-search-list">
               </div>
             </div>
             <div class="col-2">
@@ -70,8 +75,8 @@
 
 
 
-  <script async defer src="https://apis.google.com/js/api.js" onload="gapiLoaded()"></script>
-  <script async defer src="https://accounts.google.com/gsi/client" onload="gisLoaded()"></script>
+  <script src="https://apis.google.com/js/api.js" onload="gapiLoaded()"></script>
+  <script src="https://accounts.google.com/gsi/client" onload="gisLoaded()"></script>
 </body>
 
 </html>

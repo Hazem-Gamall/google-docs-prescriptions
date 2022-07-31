@@ -3,12 +3,13 @@
  * Prints the title of a sample doc:
  * https://docs.google.com/document/d/195j9eDD3ccgjQRttHhJPymLJUCOUjs-jmwTrekvdjFE/edit
  */
-async function listFiles(file_name) {
+async function listFiles(file_name, fields, pageSize) {
     let response;
     console.log('before response')
     response = await gapi.client.drive.files.list({
-        'fields': 'files(id)',
-        'q': `name="${file_name}"`
+        'fields': `files(${fields})`,
+        'q': `name contains "${file_name}" and mimeType='application/vnd.google-apps.document'`,
+        'pageSize':pageSize
     });
     console.log('response success', response)
 
@@ -17,11 +18,20 @@ async function listFiles(file_name) {
         return false;
     }
     const output = files.reduce(
-        (str, file) => `${str}${file.name} (${file.id}\n`,
+        (str, file) => `${str}${file.name}\n`,
         'Files:\n');
-    const file_id = files[0].id
-    document.getElementById('content').innerText = file_id;
-    return file_id;
+    // const file_id = files[0].id
+    // document.getElementById('content').innerText = file_id;
+    return files;
+}
+
+async function getFile(file_id, fields){
+    let response = await gapi.client.drive.files.get({
+        fileId:file_id,
+        fields
+    })
+    console.log('response', response)
+    return response.result
 }
 
 
@@ -59,20 +69,17 @@ async function getDocLastIndex(doc_id) {
 
 async function editDoc(doc_id, edits) {
     console.log('edits', edits)
-    try {
-        let response = await gapi.client.docs.documents.batchUpdate(
-            {
-                documentId: doc_id,
-                resource:{
-                    requests: edits
-                }
-
+    let response = await gapi.client.docs.documents.batchUpdate(
+        {
+            documentId: doc_id,
+            resource: {
+                requests: edits
             }
-        )
-        console.log('batchUpdate success', response)
-    } catch (e) {
-        console.log('batchUpdate error', e)
-    }
+
+        }
+    )
+    console.log('batchUpdate ', response)
+
 }
 
 

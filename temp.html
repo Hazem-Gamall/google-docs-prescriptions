@@ -4,18 +4,88 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel='stylesheet' href='bootstrap-4.6.1-dist/css/bootstrap.min.css'>
+
     <title>Document</title>
 </head>
 
+<style>
+    #tags-input {
+        /* outline */
+        outline: #000 solid 1px;
+        padding: 20px;
+        border-radius: 0.25rem;
+        /* display: inline-block; */
+    }
+
+    #tags-input input {
+        border: none;
+    }
+
+    #tags-input input:focus {
+        outline: none !important;
+        border: none !important;
+    }
+</style>
+
 <body>
 
-    <iframe width="600" height="600" style="-webkit-transform:scale(1);-moz-transform-scale(0.5);" src="https://docs.google.com/document/d/1tF7VC1i0EYDGTqV6eERJnkEuR3Ley7zaINvTY7nzdDU/edit#heading=h.z0tpw7u1adzs" frameborder="1" ></iframe>
 
+    <datalist id="test-list">
+        <option value="CBC"></option>
+        <option value="ERS"></option>
+        <option value="PRC"></option>
+        <option value="de7ko-dimer"></option>
+    </datalist>
+
+    <!-- <iframe width="600" height="600" style="-webkit-transform:scale(1);-moz-transform-scale(0.5);" src="https://docs.google.com/document/d/1tF7VC1i0EYDGTqV6eERJnkEuR3Ley7zaINvTY7nzdDU/edit#heading=h.z0tpw7u1adzs" frameborder="1" ></iframe> -->
+    <div class="container mt-5">
+        <form action="">
+
+            <div id="tags-input">
+                <div class="row">
+                    <!-- <div class="col-"> -->
+                        <div id="tags" style="display: inline-block;">
+
+                        </div>
+                    </div>
+                    <!-- <div class="col-"> -->
+                        <div class="row">
+                        <input class="ml-4" id="tag-input" type="search" list="test-list">
+                    </div>
+                    <!-- </div> -->
+                <!-- </div> -->
+            </div>
+            <button type="submit">Submit</button>
+
+        </form>
+    </div>
+
+    <script src="jquery/jquery-3.6.0.min.js"></script>
+    <script src='bootstrap-4.6.1-dist/js/bootstrap.bundle.min.js'></script>
+
+    <script>
+        document.querySelector('form').onsubmit = function (e) {
+            e.preventDefault()
+            this.elements["test1"].forEach((test) => console.log(test.checked, test.value))
+        }
+        let tags = document.querySelector('#tags');
+        document.querySelector('#tag-input').addEventListener("keydown", function (e) {
+            if (e.key == "Enter") {
+                console.log('value=', this.value)
+                let span = document.createElement('span');
+                span.textContent = this.value
+                span.style.backgroundColor = "black"
+                span.style.color = 'white'
+                tags.append(span)
+            }
+        })
+    </script>
     <script src="js/modules/doc_update_utils.js"></script>
     <script type="module" src="js/temp.js"></script>
 
     <script>
-       
+
 
     </script>
 </body>
