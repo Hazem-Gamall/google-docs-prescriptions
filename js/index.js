@@ -1,5 +1,5 @@
 import { DocHandler } from './modules/doc_update_utils.js'
-
+import { handleAuthClick } from './auth.js';
 document.querySelector('#file-name').addEventListener('input', async function () {
     console.log(this.value)
     let files;

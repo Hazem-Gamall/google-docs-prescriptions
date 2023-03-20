@@ -2,10 +2,12 @@
 /* exported gisLoaded */
 /* exported handleAuthClick */
 /* exported handleSignoutClick */
-
+import { CLIENT_ID, API_KEY } from "./modules/api_keys.js";
 // TODO(developer): Set to client ID and API key from the Developer Console
-const CLIENT_ID = '691109895020-o5jgr4nbtch2c36218l6d5va9nbh44tv.apps.googleusercontent.com';
-const API_KEY = 'AIzaSyBMfTC-82TdxMI7SDAX356xwei6KMkkbOU';
+// const CLIENT_ID = '691109895020-o5jgr4nbtch2c36218l6d5va9nbh44tv.apps.googleusercontent.com';
+// const API_KEY = 'AIzaSyBMfTC-82TdxMI7SDAX356xwei6KMkkbOU';
+
+console.log("client", CLIENT_ID, API_KEY)
 
 // Discovery doc URL for APIs used by the quickstart
 const DISCOVERY_DOCS = [
@@ -127,3 +129,5 @@ function handleSignoutClick() {
         // document.getElementById('signout_button').style.visibility = 'hidden';
     }
 }
+
+export {gisLoaded, gapiLoaded, handleAuthClick};
