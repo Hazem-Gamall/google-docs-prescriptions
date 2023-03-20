@@ -2,7 +2,6 @@
 /* exported gisLoaded */
 /* exported handleAuthClick */
 /* exported handleSignoutClick */
-import { CLIENT_ID, API_KEY } from "./modules/api_keys.js";
 // TODO(developer): Set to client ID and API key from the Developer Console
 // const CLIENT_ID = '691109895020-o5jgr4nbtch2c36218l6d5va9nbh44tv.apps.googleusercontent.com';
 // const API_KEY = 'AIzaSyBMfTC-82TdxMI7SDAX356xwei6KMkkbOU';
@@ -38,6 +37,8 @@ let gisInited = false;
 function gapiLoaded() {
     gapi.load('client', intializeGapiClient);
     gapiInited = true;
+    console.log('tets2');
+    apiReady();
 }
 
 /**
@@ -55,6 +56,7 @@ async function intializeGapiClient() {
         session_token = JSON.parse(session_token);
         gapi.client.setToken(session_token)
     }
+    
 
 }
 
@@ -69,7 +71,8 @@ function gisLoaded() {
         callback: '', // defined later
     });
     gisInited = true;
-
+    console.log('tets1');
+    apiReady();
 }
 
 
@@ -77,12 +80,13 @@ function gisLoaded() {
 /**
  * Enables user interaction after all libraries are loaded.
  */
-// function apiReady() {
-//     if (gapiInited && gisInited) {
-//         console.log('api')
-//         api_ready_callback()
-//     }
-// }
+function apiReady() {
+    console.log(`gapi:${gapiInited} gis:${gisInited}`);
+    if (gapiInited && gisInited) {
+        console.log('api');
+        stopLoading();
+    }
+}
 
 /**
  *  Sign in the user upon button click.
@@ -129,5 +133,3 @@ function handleSignoutClick() {
         // document.getElementById('signout_button').style.visibility = 'hidden';
     }
 }
-
-export {gisLoaded, gapiLoaded, handleAuthClick};

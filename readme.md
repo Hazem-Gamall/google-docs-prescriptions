@@ -1,2 +1,3 @@
-# To test this project please add an api_keys.js file in the modules/ directory.
-# the file should export {CLIENT_ID, API_KEY}
+# To test this project please add an api_keys.js file containing your credentials as demonstrated below.
+# CLIENT_ID = "your client_id"
+# API_KEY = "your api_key"

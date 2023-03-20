@@ -46,7 +46,7 @@
           <div class="row justify-content-center my-3">
             <div class="col-7">
               <div class="form-group">
-                <input class='form-control' type="search" name="file-name" id="file-name" placeholder="File Name" list="file-search-list">
+                <input class='form-control' type="search" name="file-name" id="file-name" placeholder="File Name" list="file-search-list" disabled>
               </div>
             </div>
             <div class="col-2">
@@ -66,19 +66,18 @@
   <!-- <button id="signout_button" onclick="handleSignoutClick()">Sign Out</button> -->
 
   <pre id="content" style="white-space: pre-wrap;"></pre>
-  <script src="js/modules/api_keys.js"></script>
-  <script type="module" src="js/auth.js"></script>
+  <script src="js/api_keys.js"></script>
+  <script src="js/loading.js"></script>
+  <script src="js/auth.js"></script>
   <script src="jquery/jquery-3.6.0.min.js"></script>
   <script src='bootstrap-4.6.1-dist/js/bootstrap.bundle.min.js'></script>
   <script src="js/docs.js"></script>
   <script src="js/modules/doc_update_utils.js"></script>
   <script type="module" src="js/index.js"></script>
-  <script type="module" src="js/api_loader.js"></script>
 
 
-
-  <!-- <script src="https://apis.google.com/js/api.js" onload="gapiLoaded()"></script>
-  <script src="https://accounts.google.com/gsi/client" onload="gisLoaded()"></script> -->
+  <script src="https://apis.google.com/js/api.js" onload="gapiLoaded()"></script>
+  <script src="https://accounts.google.com/gsi/client" onload="gisLoaded()"></script>
 </body>
 
 </html>

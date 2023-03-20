@@ -1,22 +1,27 @@
 import { DocHandler } from './modules/doc_update_utils.js'
-import { handleAuthClick } from './auth.js';
-document.querySelector('#file-name').addEventListener('input', async function () {
+
+
+const getFileSuggestions = async function () {
     console.log(this.value)
     let files;
     try {
         files = await listFiles(this.value, 'name', 5);
-    }catch(e){
-        if(e.status == 401 || e.status == 403){
+    } catch (e) {
+        if (e.status == 401 || e.status == 403) {
             handleAuthClick();
         }
     }
     console.log('files', files)
     let file_search_list = document.querySelector('#file-search-list')
     file_search_list.innerHTML = ''
-    if (files !== false)
+    if (files)
         files.forEach((file) => file_search_list.innerHTML += `<option value="${file.name}"></option>`)
 
-})
+}
+
+document.querySelector('#file-name').addEventListener('focus', getFileSuggestions)
+
+document.querySelector('#file-name').addEventListener('input', getFileSuggestions)
 
 
 document.querySelector('#dialog-ok').onclick = beginDocCreation;
@@ -59,14 +64,14 @@ document.querySelector('#file-name-form').addEventListener('submit', async (e) =
     e.preventDefault()
     let checkListFilesResult = (documentId) => {
         console.log('doc id', documentId)
-        if(documentId === false){
+        if (documentId === false) {
             openDialog();
-        }else{
+        } else {
             let id = documentId[0].id
             console.log('id', id)
             moveToFileEdit(id);
         }
-        
+
     }
     let file_name = document.querySelector('#file-name').value
     try {
