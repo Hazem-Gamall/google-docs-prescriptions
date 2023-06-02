@@ -50,7 +50,7 @@ function moveToFileEdit(documentId, newDoc) {
         params.set('new_doc', true);
     // console.log('params get', params.get('file_id'))
     console.log('params', params.toString());
-    let new_url = new URL(`${location.origin}/file_edit.html`);
+    let new_url = new URL(`${location.href}/file_edit.html`);
     new_url.search = params.toString();
     // console.log('new url', new_url)
     // console.log('new url string', new_url.toString())
